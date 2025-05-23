@@ -1,0 +1,24 @@
+Instale os pacotes necessários usando o pip. Execute este comando no terminal:
+
+bash
+/usr/local/python/current/bin/python -m pip install flask flask-sqlalchemy
+Verifique a instalação com:
+
+bash
+/usr/local/python/current/bin/python -m pip show flask
+Execute a aplicação novamente:
+
+bash
+/usr/local/python/current/bin/python /workspaces/MVPNFeCRUD/PythonMVP/app.py
+Se ainda tiver problemas, verifique:
+
+Se está usando o Python correto (o mesmo onde instalou os pacotes)
+
+Se seu ambiente de desenvolvimento tem permissão para instalar pacotes
+
+Se o caminho do Python está configurado corretamente no seu workspace
+
+Para ambientes restritos, você pode tentar instalar as dependências localmente:
+
+bash
+/usr/local/python/current/bin/python -m pip install --user flask flask-sqlalchemy
