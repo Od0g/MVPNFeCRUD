@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Detalhes da NF-e</h2>
+
+<div>
+    <p><strong>Tipo:</strong> {{ "Recebida" if nfe_type == 'recebida' else "Expedida" }}</p>
+    <p><strong>ID:</strong> {{ nfe.id }}</p>
+    <p><strong>Chave de Acesso:</strong> {{ nfe.chave_acesso }}</p>
+    <p><strong>Número/Série:</strong> {{ nfe.numero_nfe }}/{{ nfe.serie_nfe }}</p>
+    
+    {% if nfe_type == 'recebida' %}
+        <p><strong>Data/Hora Recebimento:</strong> {{ nfe.data_hora_recebimento.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p><strong>Fornecedor:</strong> {{ nfe.nome_fornecedor }} ({{ nfe.cnpj_fornecedor }})</p>
+        <p><strong>Valor Total:</strong> R$ {{ "%.2f"|format(nfe.valor_total) }}</p>
+        <p><strong>Usuário Recebimento:</strong> {{ nfe.usuario_recebimento }}</p>
+        <p><strong>Região:</strong> {{ nfe.regiao or '-' }}</p>
+        <p><strong>Cliente Interno Responsável:</strong> {{ nfe.cliente_responsavel or '-' }}</p>
+        <p><strong>Observação Qualidade:</strong> {{ nfe.qualidade_observacao or '-' }}</p>
+        <p><strong>Validada:</strong> {{ "Sim" if nfe.validada else "Não" }}</p>
+        <p><strong>Confirmação Recebimento Físico:</strong> {{ "Sim" if nfe.confirmacao_recebimento_fisico else "Não" }}</p>
+    {% else %}
+        <p><strong>Data/Hora Emissão:</strong> {{ nfe.data_hora_emissao.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p><strong>Cliente:</strong> {{ nfe.nome_cliente }} ({{ nfe.cnpj_cliente }})</p>
+        <p><strong>Valor Total:</strong> R$ {{ "%.2f"|format(nfe.valor_total) }}</p>
+        <p><strong>Usuário Emissor:</strong> {{ nfe.usuario_emissor }}</p>
+        <p><strong>Região:</strong> {{ nfe.regiao or '-' }}</p>
+        <p><strong>Observação Qualidade:</strong> {{ nfe.qualidade_observacao or '-' }}</p>
+        <p><strong>Status SEFAZ:</strong> {{ nfe.status_sefaz }}</p>
+    {% endif %}
+
+    <p><strong>Caminho XML:</strong> {{ nfe.caminho_xml }} <a href="{{ url_for('download_xml', nfe_type=nfe_type, nfe_id=nfe.id) }}" class="btn-action btn-download">Baixar XML</a></p>
+
+    <a href="{{ url_for('recebimento') if nfe_type == 'recebida' else url_for('expedicao') }}">Voltar para a lista</a>
+</div>
+{% endblock %}

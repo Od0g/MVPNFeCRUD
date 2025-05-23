@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Editar NF-e Recebida (ID: {{ nfe.id }})</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="chave_acesso">Chave de Acesso:</label>
+    <input type="text" id="chave_acesso" name="chave_acesso" value="{{ nfe.chave_acesso }}" required maxlength="44">
+
+    <label for="numero_nfe">Número NF-e:</label>
+    <input type="text" id="numero_nfe" name="numero_nfe" value="{{ nfe.numero_nfe }}" required maxlength="9">
+
+    <label for="serie_nfe">Série NF-e:</label>
+    <input type="text" id="serie_nfe" name="serie_nfe" value="{{ nfe.serie_nfe }}" required maxlength="3">
+
+    <label for="cnpj_fornecedor">CNPJ Fornecedor:</label>
+    <input type="text" id="cnpj_fornecedor" name="cnpj_fornecedor" value="{{ nfe.cnpj_fornecedor }}" required maxlength="14">
+
+    <label for="nome_fornecedor">Nome Fornecedor:</label>
+    <input type="text" id="nome_fornecedor" name="nome_fornecedor" value="{{ nfe.nome_fornecedor }}" required>
+
+    <label for="valor_total">Valor Total:</label>
+    <input type="number" id="valor_total" name="valor_total" step="0.01" value="{{ nfe.valor_total }}" required>
+
+    <label for="usuario_recebimento">Usuário Registro:</label>
+    <input type="text" id="usuario_recebimento" name="usuario_recebimento" value="{{ nfe.usuario_recebimento }}" required>
+
+    <label for="regiao">Região:</label>
+    <input type="text" id="regiao" name="regiao" value="{{ nfe.regiao or '' }}">
+
+    <label for="cliente_responsavel">Cliente Interno Responsável:</label>
+    <input type="text" id="cliente_responsavel" name="cliente_responsavel" value="{{ nfe.cliente_responsavel or '' }}">
+
+    <label for="qualidade_observacao">Observação Qualidade:</label>
+    <textarea id="qualidade_observacao" name="qualidade_observacao">{{ nfe.qualidade_observacao or '' }}</textarea>
+
+    <label for="xml_file">Novo Arquivo XML (opcional):</label>
+    <input type="file" id="xml_file" name="xml_file" accept=".xml">
+    <small>Arquivo atual: {{ nfe.caminho_xml.split('/')[-1] if nfe.caminho_xml else 'Nenhum' }}</small>
+
+    <div style="grid-column: span 2;">
+        <input type="checkbox" id="validada" name="validada" {% if nfe.validada %}checked{% endif %}>
+        <label for="validada">NF-e Validada (Assinatura, etc.)</label>
+    </div>
+
+    <div style="grid-column: span 2;">
+        <input type="checkbox" id="confirmacao_recebimento_fisico" name="confirmacao_recebimento_fisico" {% if nfe.confirmacao_recebimento_fisico %}checked{% endif %}>
+        <label for="confirmacao_recebimento_fisico">Confirmação Recebimento Físico</label>
+    </div>
+
+    <button type="submit">Atualizar NF-e Recebida</button>
+</form>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Visualizar NF-e{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">NF-e {{ nfe.chave }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Emitente</h5>
+                <ul class="list-unstyled">
+                    <li><strong>Nome:</strong> {{ detalhes.emitente.nome }}</li>
+                    <li><strong>CNPJ:</strong> {{ detalhes.emitente.cnpj }}</li>
+                    <li><strong>Endereço:</strong> 
+                        {{ detalhes.emitente.endereco.logradouro }}, 
+                        {{ detalhes.emitente.endereco.numero }} - 
+                        {{ detalhes.emitente.endereco.cidade }}/{{ detalhes.emitente.endereco.uf }}
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="col-md-6">
+                <h5>Destinatário</h5>
+                <ul class="list-unstyled">
+                    <li><strong>Nome:</strong> {{ detalhes.destinatario.nome }}</li>
+                    <li><strong>CNPJ:</strong> {{ detalhes.destinatario.cnpj }}</li>
+                    <li><strong>Endereço:</strong> 
+                        {{ detalhes.destinatario.endereco.logradouro }}, 
+                        {{ detalhes.destinatario.endereco.numero }} - 
+                        {{ detalhes.destinatario.endereco.cidade }}/{{ detalhes.destinatario.endereco.uf }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <h5 class="mt-4">Produtos/Serviços</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                        <th>Valor Unitário</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in detalhes.produtos %}
+                    <tr>
+                        <td>{{ produto.descricao }}</td>
+                        <td>{{ produto.quantidade }} {{ produto.unidade }}</td>
+                        <td>R$ {{ produto.valor_unitario }}</td>
+                        <td>R$ {{ produto.valor_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-active">
+                        <td colspan="3" class="text-end"><strong>Total NF-e:</strong></td>
+                        <td><strong>R$ {{ detalhes.total.valor }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ url_for('download_nfe', nfe_id=nfe.id) }}" class="btn btn-primary">
+                Download XML
+            </a>
+            <a href="{{ url_for('recebimento') }}" class="btn btn-secondary">
+                Voltar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

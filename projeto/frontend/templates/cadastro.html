@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Cadastro de Usuário{% endblock %}
+
+{% block content %}
+<div class="form-container bg-white">
+    <h2 class="mb-4">Cadastrar Novo Usuário</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">Nome de Usuário</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="matricula" class="form-label">Matrícula</label>
+            <input type="text" class="form-control" id="matricula" name="matricula" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin">
+            <label class="form-check-label" for="is_admin">Usuário Administrador</label>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+    </form>
+</div>
+{% endblock %}

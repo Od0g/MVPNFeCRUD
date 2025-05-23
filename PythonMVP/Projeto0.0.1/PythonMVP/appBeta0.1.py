@@ -1,3 +1,4 @@
+#app Beta 0.1
 from flask import Flask, render_template, request, redirect, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -21,7 +22,7 @@ class NFe(db.Model):
 @app.route('/')
 def index():
     nfes = NFe.query.all()
-    return render_template('index.html', nfes=nfes)
+    return render_template('indexBeta0.1.html', nfes=nfes)
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -113,18 +114,27 @@ def view_nfe(id):
             },
             'produtos': [],
             'total': {
-                'valor': root.find('.//nfe:total/nfe:ICMSTot/nfe:vNF', ns).text
+                'valor': "" # Will be formatted below
             }
         }
         
+        # Format the total value
+        total_value_str = root.find('.//nfe:total/nfe:ICMSTot/nfe:vNF', ns).text
+        detalhes['total']['valor'] = "R$ {:,.2f}".format(float(total_value_str)).replace(",", "X").replace(".", ",").replace("X", ".")
+        
         # Extrair produtos
         for item in root.findall('.//nfe:det', ns):
+            # Convert to float before formatting
+            valor_unitario = float(item.find('.//nfe:prod/nfe:vUnCom', ns).text)
+            valor_total_prod = float(item.find('.//nfe:prod/nfe:vProd', ns).text)
+
             prod = {
                 'descricao': item.find('.//nfe:prod/nfe:xProd', ns).text,
-                'quantidade': item.find('.//nfe:prod/nfe:qCom', ns).text,
+                'quantidade': item.find('.//nfe:prod/nfe:qCom', ns).text, # Quantity often doesn't need currency formatting
                 'unidade': item.find('.//nfe:prod/nfe:uCom', ns).text,
-                'valor_unitario': item.find('.//nfe:prod/nfe:vUnCom', ns).text,
-                'valor_total': item.find('.//nfe:prod/nfe:vProd', ns).text
+                # Apply the formatting for Brazilian currency
+                'valor_unitario': "R$ {:,.2f}".format(valor_unitario).replace(",", "X").replace(".", ",").replace("X", "."),
+                'valor_total': "R$ {:,.2f}".format(valor_total_prod).replace(",", "X").replace(".", ",").replace("X", ".")
             }
             detalhes['produtos'].append(prod)
             
@@ -132,7 +142,6 @@ def view_nfe(id):
         
     except Exception as e:
         return f"Erro ao ler XML: {str(e)}"
-
 
 
 if __name__ == '__main__':

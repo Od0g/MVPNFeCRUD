@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Expedição de NF-e{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Registro de Expedição</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="nfe_id" class="form-label">Selecione a NF-e</label>
+                    <select class="form-select" id="nfe_id" name="nfe_id" required>
+                        <option value="">Selecione uma NF-e...</option>
+                        {% for nfe in nfes_para_expedir %}
+                        <option value="{{ nfe.id }}">{{ nfe.chave }} - {{ nfe.fornecedor.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="destino" class="form-label">Destino</label>
+                    <input type="text" class="form-control" id="destino" name="destino" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Registrar Expedição</button>
+                </div>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        <h5 class="mb-3">Últimas Expedições</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Chave NF-e</th>
+                        <th>Destino</th>
+                        <th>Data Expedição</th>
+                        <th>Responsável</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expedicao in expedicoes %}
+                    <tr>
+                        <td>{{ expedicao.nfe.chave }}</td>
+                        <td>{{ expedicao.destino }}</td>
+                        <td>{{ expedicao.data_expedicao.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ expedicao.usuario.username }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nenhuma expedição registrada</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

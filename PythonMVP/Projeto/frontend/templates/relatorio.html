@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Relatórios de NF-e</h2>
+
+<h3>NF-e Recebidas</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data/Hora</th>
+            <th>NFe Série</th>
+            <th>Fornecedor</th>
+            <th>Usuário</th>
+            <th>Região</th>
+            <th>Cliente Responsável</th>
+            <th>Qualidade</th>
+            <th>Chave de Acesso</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nfe in recebidas %}
+        <tr>
+            <td>{{ nfe.id }}</td>
+            <td>{{ nfe.data_hora_recebimento.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ nfe.numero_nfe }}/{{ nfe.serie_nfe }}</td>
+            <td>{{ nfe.nome_fornecedor }}</td>
+            <td>{{ nfe.usuario_recebimento }}</td>
+            <td>{{ nfe.regiao or '-' }}</td>
+            <td>{{ nfe.cliente_responsavel or '-' }}</td>
+            <td>{{ nfe.qualidade_observacao or '-' }}</td>
+            <td>{{ nfe.chave_acesso }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9">Nenhuma NF-e recebida para exibir no relatório.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>NF-e Expedidas</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data/Hora</th>
+            <th>NFe Série</th>
+            <th>Cliente</th>
+            <th>Usuário</th>
+            <th>Região</th>
+            <th>Qualidade</th>
+            <th>Status SEFAZ</th>
+            <th>Chave de Acesso</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nfe in expedidas %}
+        <tr>
+            <td>{{ nfe.id }}</td>
+            <td>{{ nfe.data_hora_emissao.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ nfe.numero_nfe }}/{{ nfe.serie_nfe }}</td>
+            <td>{{ nfe.nome_cliente }}</td>
+            <td>{{ nfe.usuario_emissor }}</td>
+            <td>{{ nfe.regiao or '-' }}</td>
+            <td>{{ nfe.qualidade_observacao or '-' }}</td>
+            <td>{{ nfe.status_sefaz }}</td>
+            <td>{{ nfe.chave_acesso }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9">Nenhuma NF-e expedida para exibir no relatório.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Registro de NF-e Expedidas</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="chave_acesso">Chave de Acesso:</label>
+    <input type="text" id="chave_acesso" name="chave_acesso" required maxlength="44">
+
+    <label for="numero_nfe">Número NF-e:</label>
+    <input type="text" id="numero_nfe" name="numero_nfe" required maxlength="9">
+
+    <label for="serie_nfe">Série NF-e:</label>
+    <input type="text" id="serie_nfe" name="serie_nfe" required maxlength="3">
+
+    <label for="cnpj_cliente">CNPJ Cliente:</label>
+    <input type="text" id="cnpj_cliente" name="cnpj_cliente" required maxlength="14">
+
+    <label for="nome_cliente">Nome Cliente:</label>
+    <input type="text" id="nome_cliente" name="nome_cliente" required>
+
+    <label for="valor_total">Valor Total:</label>
+    <input type="number" id="valor_total" name="valor_total" step="0.01" required>
+
+    <label for="usuario_emissor">Usuário Emissor:</label>
+    <input type="text" id="usuario_emissor" name="usuario_emissor" required>
+
+    <label for="regiao">Região:</label>
+    <input type="text" id="regiao" name="regiao">
+
+    <label for="qualidade_observacao">Observação Qualidade:</label>
+    <textarea id="qualidade_observacao" name="qualidade_observacao"></textarea>
+
+    <label for="xml_file">Arquivo XML:</label>
+    <input type="file" id="xml_file" name="xml_file" accept=".xml" required>
+
+    <label for="status_sefaz">Status SEFAZ:</label>
+    <select id="status_sefaz" name="status_sefaz" required>
+        <option value="Autorizada">Autorizada</option>
+        <option value="Cancelada">Cancelada</option>
+        <option value="Denegada">Denegada</option>
+        <option value="Inutilizada">Inutilizada</option>
+    </select>
+
+    <button type="submit">Registrar NF-e Expedida</button>
+</form>
+
+<h3>NF-e Expedidas Registradas</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data/Hora Emissão</th>
+            <th>Chave de Acesso</th>
+            <th>Número/Série</th>
+            <th>Cliente</th>
+            <th>Valor</th>
+            <th>Usuário Emissor</th>
+            <th>Status SEFAZ</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nfe in nfe_expedidas %}
+        <tr>
+            <td>{{ nfe.id }}</td>
+            <td>{{ nfe.data_hora_emissao.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ nfe.chave_acesso }}</td>
+            <td>{{ nfe.numero_nfe }}/{{ nfe.serie_nfe }}</td>
+            <td>{{ nfe.nome_cliente }}</td>
+            <td>R$ {{ "%.2f"|format(nfe.valor_total) }}</td>
+            <td>{{ nfe.usuario_emissor }}</td>
+            <td>{{ nfe.status_sefaz }}</td>
+            <td>
+                <a href="{{ url_for('view_nfe', nfe_type='expedida', nfe_id=nfe.id) }}" class="btn-action btn-view">Ver</a>
+                <a href="{{ url_for('download_xml', nfe_type='expedida', nfe_id=nfe.id) }}" class="btn-action btn-download">XML</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9">Nenhuma NF-e expedida registrada ainda.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,187 @@
+Vou adicionar uma funcionalidade de visualização da NFe com parsing dos dados principais. Vamos modificar o código para incluir uma página de detalhes:
+
+python
+# Adicione esta nova rota ao app.py
+@app.route('/view/<int:id>')
+def view_nfe(id):
+    nfe = NFe.query.get(id)
+    
+    try:
+        tree = ET.parse(nfe.arquivo_path)
+        root = tree.getroot()
+        ns = {'nfe': 'http://www.portalfiscal.inf.br/nfe'}
+        
+        # Extrair mais dados
+        detalhes = {
+            'emitente': {
+                'nome': root.find('.//nfe:emit/nfe:xNome', ns).text,
+                'cnpj': root.find('.//nfe:emit/nfe:CNPJ', ns).text,
+                'endereco': {
+                    'logradouro': root.find('.//nfe:emit/nfe:enderEmit/nfe:xLgr', ns).text,
+                    'numero': root.find('.//nfe:emit/nfe:enderEmit/nfe:nro', ns).text,
+                    'cidade': root.find('.//nfe:emit/nfe:enderEmit/nfe:xMun', ns).text,
+                    'uf': root.find('.//nfe:emit/nfe:enderEmit/nfe:UF', ns).text
+                }
+            },
+            'destinatario': {
+                'nome': root.find('.//nfe:dest/nfe:xNome', ns).text,
+                'cnpj': root.find('.//nfe:dest/nfe:CNPJ', ns).text,
+                'endereco': {
+                    'logradouro': root.find('.//nfe:dest/nfe:enderDest/nfe:xLgr', ns).text,
+                    'numero': root.find('.//nfe:dest/nfe:enderDest/nfe:nro', ns).text,
+                    'cidade': root.find('.//nfe:dest/nfe:enderDest/nfe:xMun', ns).text,
+                    'uf': root.find('.//nfe:dest/nfe:enderDest/nfe:UF', ns).text
+                }
+            },
+            'produtos': [],
+            'total': {
+                'valor': root.find('.//nfe:total/nfe:ICMSTot/nfe:vNF', ns).text
+            }
+        }
+        
+        # Extrair produtos
+        for item in root.findall('.//nfe:det', ns):
+            prod = {
+                'descricao': item.find('.//nfe:prod/nfe:xProd', ns).text,
+                'quantidade': item.find('.//nfe:prod/nfe:qCom', ns).text,
+                'unidade': item.find('.//nfe:prod/nfe:uCom', ns).text,
+                'valor_unitario': item.find('.//nfe:prod/nfe:vUnCom', ns).text,
+                'valor_total': item.find('.//nfe:prod/nfe:vProd', ns).text
+            }
+            detalhes['produtos'].append(prod)
+            
+        return render_template('view.html', nfe=nfe, detalhes=detalhes)
+        
+    except Exception as e:
+        return f"Erro ao ler XML: {str(e)}"
+html
+<!-- templates/view.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar NF-e {{ nfe.chave }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .nfe-container { background: #f8f9fa; padding: 20px; margin-top: 20px; border-radius: 5px; }
+        .header { border-bottom: 2px solid #dee2e6; margin-bottom: 20px; padding-bottom: 15px; }
+        .produto-table { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="nfe-container">
+            <div class="header">
+                <h4>NF-e {{ nfe.chave }}</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Emitente</h5>
+                        <p>{{ detalhes.emitente.nome }}<br>
+                        CNPJ: {{ detalhes.emitente.cnpj }}<br>
+                        {{ detalhes.emitente.endereco.logradouro }}, {{ detalhes.emitente.endereco.numero }}<br>
+                        {{ detalhes.emitente.endereco.cidade }}/{{ detalhes.emitente.endereco.uf }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Destinatário</h5>
+                        <p>{{ detalhes.destinatario.nome }}<br>
+                        CNPJ: {{ detalhes.destinatario.cnpj }}<br>
+                        {{ detalhes.destinatario.endereco.logradouro }}, {{ detalhes.destinatario.endereco.numero }}<br>
+                        {{ detalhes.destinatario.endereco.cidade }}/{{ detalhes.destinatario.endereco.uf }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <h5>Produtos/Serviços</h5>
+            <table class="table produto-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                        <th>Valor Unitário</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in detalhes.produtos %}
+                    <tr>
+                        <td>{{ produto.descricao }}</td>
+                        <td>{{ produto.quantidade }} {{ produto.unidade }}</td>
+                        <td>R$ {{ produto.valor_unitario }}</td>
+                        <td>R$ {{ produto.valor_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="total-section text-end">
+                <h4>Valor Total: R$ {{ detalhes.total.valor }}</h4>
+            </div>
+
+            <div class="mt-4">
+                <a href="/" class="btn btn-secondary">Voltar</a>
+                <a href="/download/{{ nfe.id }}" class="btn btn-primary">Download XML</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+Atualize também o index.html para adicionar o botão de visualização:
+
+html
+<!-- Na tabela do index.html, modifique a coluna Ações -->
+<td>
+    <a href="/view/{{ nfe.id }}" class="btn btn-sm btn-info">Visualizar</a>
+    <a href="/download/{{ nfe.id }}" class="btn btn-sm btn-success">Download</a>
+    <a href="/delete/{{ nfe.id }}" class="btn btn-sm btn-danger">Excluir</a>
+</td>
+Esta implementação fornecerá:
+
+Visualização completa dos dados principais da NFe:
+
+Dados do emitente e destinatário
+
+Listagem completa de produtos/serviços
+
+Valores e totais
+
+Endereços completos
+
+Layout organizado similar a uma NF-e física
+
+Preservação dos dados originais do XML
+
+Para melhorar a visualização você pode:
+
+Adicionar formatação monetária mais precisa
+
+python
+# No código Python, modifique os valores numéricos:
+prod['valor_unitario'] = "{:,.2f}".format(float(prod['valor_unitario'])).replace(",", "v").replace(".", ",").replace("v", ".")
+Adicionar validação de assinatura digital usando a biblioteca signxml
+
+bash
+pip install signxml
+Adicionar um visualizador XML integrado usando o plugin Monaco Editor (mesmo editor do VS Code)
+
+html
+<!-- Adicione no view.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+<div id="xml-viewer" style="height: 500px; border: 1px solid #ddd; margin-top: 20px;"></div>
+
+<script>
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+        fetch('/download/{{ nfe.id }}')
+            .then(response => response.text())
+            .then(xmlContent => {
+                const editor = monaco.editor.create(document.getElementById('xml-viewer'), {
+                    value: xmlContent,
+                    language: 'xml',
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    theme: 'vs-light'
+                });
+            });
+    });
+</script>
+Esta solução mantém todos os requisitos originais enquanto adiciona uma visualização detalhada da NF-e diretamente no navegador.

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Recebimento de NF-e{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Registro de Recebimento</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="xml_file" class="form-label">Arquivo XML da NF-e</label>
+                    <input class="form-control" type="file" id="xml_file" name="xml_file" accept=".xml" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="turno" class="form-label">Turno</label>
+                    <select class="form-select" id="turno" name="turno" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Noite">Noite</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Registrar Recebimento</button>
+                </div>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        <h5 class="mb-3">NF-e Recebidas Recentemente</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Chave</th>
+                        <th>Fornecedor</th>
+                        <th>Data Recebimento</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nfe in nfes %}
+                    <tr>
+                        <td>{{ nfe.chave }}</td>
+                        <td>{{ nfe.fornecedor.nome }}</td>
+                        <td>{{ nfe.recebimentos[0].data_recebimento.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('view_nfe', nfe_id=nfe.id) }}" class="btn btn-sm btn-info">
+                                Visualizar
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nenhuma NF-e recebida recentemente</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

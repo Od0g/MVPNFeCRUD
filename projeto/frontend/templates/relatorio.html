@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-secondary text-white">
+        <h4 class="mb-0">Relatórios Consolidados</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Recebimentos</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>NF-e</th>
+                                <th>Fornecedor</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recebimento in recebimentos %}
+                            <tr>
+                                <td>{{ recebimento.data_recebimento.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ recebimento.nfe.chave }}</td>
+                                <td>{{ recebimento.nfe.fornecedor.nome }}</td>
+                                <td>{{ recebimento.usuario.username }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h5>Expedições</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>NF-e</th>
+                                <th>Destino</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expedicao in expedicoes %}
+                            <tr>
+                                <td>{{ expedicao.data_expedicao.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ expedicao.nfe.chave }}</td>
+                                <td>{{ expedicao.destino }}</td>
+                                <td>{{ expedicao.usuario.username }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%

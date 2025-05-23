@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Operação</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, select, button { margin: 5px 0; padding: 8px; width: 100%; }
+    .container { max-width: 400px; margin: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registrar Operação de NF-e</h2>
+    
+    <label>Chave da NF-e:</label>
+    <input type="text" id="chave" placeholder="Digite a chave da NF-e">
+
+    <label>Tipo de Operação:</label>
+    <select id="tipo">
+      <option value="recebida">Recebida</option>
+      <option value="expedida">Expedida</option>
+    </select>
+
+    <button onclick="registrarOperacao()">Registrar</button>
+
+    <p id="resposta"></p>
+  </div>
+
+  <script>
+    async function registrarOperacao() {
+      const chave = document.getElementById('chave').value;
+      const tipo = document.getElementById('tipo').value;
+      const resposta = document.getElementById('resposta');
+
+      const response = await fetch('/operacao/registrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chave, tipo })
+      });
+
+      const resultado = await response.json();
+      resposta.textContent = resultado.message;
+      resposta.style.color = response.ok ? 'green' : 'red';
+    }
+  </script>
+</body>
+</html>

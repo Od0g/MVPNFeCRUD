@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+  <infNFe Id="NFe3525051234567800012355001000000001100000001" versao="4.00">
+    <!-- Identificação da NF-e -->
+    <ide>
+      <cUF>35</cUF> <!-- Código do Estado (SP) -->
+      <cNF>00000001</cNF> <!-- Código Numérico -->
+      <natOp>Venda de Mercadorias</natOp> <!-- Natureza da Operação -->
+      <mod>55</mod> <!-- Modelo da NF-e -->
+      <serie>1</serie> <!-- Série -->
+      <nNF>1</nNF> <!-- Número da NF-e -->
+      <dhEmi>2025-05-23T09:00:00-03:00</dhEmi> <!-- Data e Hora de Emissão -->
+      <tpNF>1</tpNF> <!-- Tipo de Operação (1=Saída) -->
+      <idDest>1</idDest> <!-- Destino da Operação (1=Interna) -->
+      <cMunFG>3550308</cMunFG> <!-- Código do Município (São Paulo) -->
+      <tpImp>1</tpImp> <!-- Formato de Impressão (1=DANFE Normal) -->
+      <tpEmis>1</tpEmis> <!-- Tipo de Emissão (1=Normal) -->
+      <cDV>1</cDV> <!-- Dígito Verificador -->
+      <tpAmb>2</tpAmb> <!-- Ambiente (2=Homologação) -->
+      <finNFe>1</finNFe> <!-- Finalidade (1=Normal) -->
+      <indFinal>1</indFinal> <!-- Consumidor Final (1=Sim) -->
+      <indPres>1</indPres> <!-- Presença do Comprador (1=Presencial) -->
+      <procEmi>0</procEmi> <!-- Processo de Emissão (0=Emissor Próprio) -->
+      <verProc>1.0</verProc> <!-- Versão do Processo -->
+    </ide>
+
+    <!-- Emitente -->
+    <emit>
+      <CNPJ>12345678000123</CNPJ> <!-- CNPJ do Emitente -->
+      <xNome>Empresa Fictícia LTDA</xNome> <!-- Razão Social -->
+      <xFant>Empresa Fictícia</xFant> <!-- Nome Fantasia -->
+      <enderEmit>
+        <xLgr>Rua Exemplo</xLgr> <!-- Logradouro -->
+        <nro>123</nro> <!-- Número -->
+        <xBairro>Centro</xBairro> <!-- Bairro -->
+        <cMun>3550308</cMun> <!-- Código do Município -->
+        <xMun>São Paulo</xMun> <!-- Nome do Município -->
+        <UF>SP</UF> <!-- Unidade Federativa -->
+        <CEP>01001000</CEP> <!-- CEP -->
+        <cPais>1058</cPais> <!-- Código do País (Brasil) -->
+        <xPais>Brasil</xPais> <!-- Nome do País -->
+        <fone>1122334455</fone> <!-- Telefone -->
+      </enderEmit>
+      <IE>123456789012</IE> <!-- Inscrição Estadual -->
+      <CRT>3</CRT> <!-- Regime Tributário (3=Simples Nacional) -->
+    </emit>
+
+    <!-- Destinatário -->
+    <dest>
+      <CNPJ>98765432000198</CNPJ> <!-- CNPJ do Destinatário -->
+      <xNome>Cliente Fictício SA</xNome> <!-- Razão Social -->
+      <enderDest>
+        <xLgr>Avenida Teste</xLgr>
+        <nro>456</nro>
+        <xBairro>Jardins</xBairro>
+        <cMun>3550308</cMun>
+        <xMun>São Paulo</xMun>
+        <UF>SP</UF>
+        <CEP>01452000</CEP>
+        <cPais>1058</cPais>
+        <xPais>Brasil</xPais>
+        <fone>11987654321</fone>
+      </enderDest>
+      <indIEDest>1</indIEDest> <!-- Indicador de IE (1=Contribuinte) -->
+      <IE>987654321098</IE> <!-- Inscrição Estadual -->
+    </dest>
+
+    <!-- Detalhamento de Produtos -->
+    <det nItem="1">
+      <prod>
+        <cProd>12345</cProd> <!-- Código do Produto -->
+        <cEAN>7891234567890</cEAN> <!-- Código EAN -->
+        <xProd>Produto Exemplo</xProd> <!-- Descrição do Produto -->
+        <NCM>84713012</NCM> <!-- Código NCM -->
+        <CFOP>5102</CFOP> <!-- CFOP -->
+        <uCom>UN</uCom> <!-- Unidade Comercial -->
+        <qCom>10.0000</qCom> <!-- Quantidade Comercial -->
+        <vUnCom>100.00</vUnCom> <!-- Valor Unitário -->
+        <vProd>1000.00</vProd> <!-- Valor Total -->
+        <cEANTrib>7891234567890</cEANTrib> <!-- Código EAN Tributável -->
+        <uTrib>UN</uTrib> <!-- Unidade Tributável -->
+        <qTrib>10.0000</qTrib> <!-- Quantidade Tributável -->
+        <vUnTrib>100.00</vUnTrib> <!-- Valor Unitário Tributável -->
+        <indTot>1</indTot> <!-- Indicador de Totalização (1=Sim) -->
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig> <!-- Origem da Mercadoria -->
+            <CST>00</CST> <!-- Código da Situação Tributária -->
+            <modBC>3</modBC> <!-- Modalidade de Base de Cálculo -->
+            <vBC>1000.00</vBC> <!-- Valor da Base de Cálculo -->
+            <pICMS>18.00</pICMS> <!-- Alíquota do ICMS -->
+            <vICMS>180.00</vICMS> <!-- Valor do ICMS -->
+          </ICMS00>
+        </ICMS>
+        <PIS>
+          <PISAliq>
+            <CST>01</CST> <!-- Código da Situação Tributária -->
+            <vBC>1000.00</vBC> <!-- Base de Cálculo -->
+            <pPIS>1.65</pPIS> <!-- Alíquota do PIS -->
+            <vPIS>16.50</vPIS> <!-- Valor do PIS -->
+          </PISAliq>
+        </PIS>
+        <COFINS>
+          <COFINSAliq>
+            <CST>01</CST> <!-- Código da Situação Tributária -->
+            <vBC>1000.00</vBC> <!-- Base de Cálculo -->
+            <pCOFINS>7.60</pCOFINS> <!-- Alíquota do COFINS -->
+            <vCOFINS>76.00</vCOFINS> <!-- Valor do COFINS -->
+          </COFINSAliq>
+        </COFINS>
+      </imposto>
+    </det>
+
+    <!-- Totalização -->
+    <total>
+      <ICMSTot>
+        <vBC>1000.00</vBC> <!-- Base de Cálculo do ICMS -->
+        <vICMS>180.00</vICMS> <!-- Valor Total do ICMS -->
+        <vICMSDeson>0.00</vICMSDeson> <!-- Valor do ICMS Desonerado -->
+        <vBCST>0.00</vBCST> <!-- Base de Cálculo do ICMS ST -->
+        <vST>0.00</vST> <!-- Valor do ICMS ST -->
+        <vProd>1000.00</vProd> <!-- Valor Total dos Produtos -->
+        <vFrete>0.00</vFrete> <!-- Valor do Frete -->
+        <vSeg>0.00</vSeg> <!-- Valor do Seguro -->
+        <vDesc>0.00</vDesc> <!-- Valor do Desconto -->
+        <vII>0.00</vII> <!-- Valor do Imposto de Importação -->
+        <vIPI>0.00</vIPI> <!-- Valor do IPI -->
+        <vPIS>16.50</vPIS> <!-- Valor do PIS -->
+        <vCOFINS>76.00</vCOFINS> <!-- Valor do COFINS -->
+        <vOutro>0.00</vOutro> <!-- Outras Despesas -->
+        <vNF>1000.00</vNF> <!-- Valor Total da NF-e -->
+      </ICMSTot>
+    </total>
+
+    <!-- Transporte -->
+    <transp>
+      <modFrete>1</modFrete> <!-- Modalidade do Frete (1=Destinatário) -->
+    </transp>
+
+    <!-- Cobrança -->
+    <cobr>
+      <fat>
+        <nFat>001</nFat> <!-- Número da Fatura -->
+        <vOrig>1000.00</vOrig> <!-- Valor Original -->
+        <vLiq>1000.00</vLiq> <!-- Valor Líquido -->
+      </fat>
+    </cobr>
+
+    <!-- Informações Adicionais -->
+    <infAdic>
+      <infCpl>Nota fiscal emitida para testes. Dados fictícios.</infCpl>
+    </infAdic>
+  </infNFe>
+</NFe>
