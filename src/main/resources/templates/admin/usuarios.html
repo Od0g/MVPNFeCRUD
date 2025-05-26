@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários - NF-e Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .header {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .header h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #2563eb; /* hover:bg-blue-600 */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #e5e7eb;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        tr:hover {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Gerenciamento de Usuários</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a th:href="@{/dashboard}" class="nav-link">Dashboard</a></li>
+                <li sec:authorize="hasAnyAuthority('RELATORIOS_GERAR', 'ROLE_ADMIN')">
+                    <a th:href="@{/api/relatorios/nfe/pdf}" class="nav-link">Relatórios PDF</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/usuarios}" class="nav-link bg-blue-600">Gerenciar Usuários</a>
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="nav-link bg-red-500 hover:bg-red-600">Sair</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="p-6 container mx-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Gerenciar Usuários</h2>
+
+        <div class="card mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4" id="form-title">Criar Novo Usuário</h3>
+            <form id="user-form" action="#" method="post">
+                <input type="hidden" id="userId" name="id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nome de Usuário:</label>
+                        <input type="text" id="username" name="username" class="form-input" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Senha (deixe em branco para não alterar):</label>
+                    <input type="password" id="password" name="senha" class="form-input">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Papéis:</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="roleNames" value="ADMIN" class="form-checkbox rounded text-blue-500">
+                            <span class="ml-2 text-gray-700">ADMIN</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="roleNames" value="OPERACIONAL" class="form-checkbox rounded text-blue-500">
+                            <span class="ml-2 text-gray-700">OPERACIONAL</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="roleNames" value="USUARIO" class="form-checkbox rounded text-blue-500">
+                            <span class="ml-2 text-gray-700">USUARIO</span>
+                        </label>
+                        </div>
+                </div>
+                <div class="mb-6">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="enabled" name="enabled" class="form-checkbox rounded text-blue-500" checked>
+                        <span class="ml-2 text-gray-700">Ativo</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn-primary">Salvar Usuário</button>
+                <button type="button" id="cancelEdit" class="btn-danger ml-4 hidden">Cancelar Edição</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Lista de Usuários</h3>
+            <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome de Usuário</th>
+                        <th>Email</th>
+                        <th>Papéis</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userForm = document.getElementById('user-form');
+            const formTitle = document.getElementById('form-title');
+            const userIdInput = document.getElementById('userId');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const enabledInput = document.getElementById('enabled');
+            const roleCheckboxes = document.querySelectorAll('input[name="roleNames"]');
+            const userTableBody = document.getElementById('user-table-body');
+            const cancelEditButton = document.getElementById('cancelEdit');
+
+            // Função para carregar usuários
+            async function loadUsers() {
+                try {
+                    const response = await fetch('/api/admin/users');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const users = await response.json();
+                    userTableBody.innerHTML = ''; // Limpa a tabela
+                    users.forEach(user => {
+                        const row = userTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${user.id}</td>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.papeis.map(p => p.nome).join(', ')}</td>
+                            <td>${user.enabled ? 'Ativo' : 'Inativo'}</td>
+                            <td class="whitespace-nowrap">
+                                <button class="btn-edit mr-2" data-id="${user.id}">Editar</button>
+                                <button class="btn-danger" data-id="${user.id}">Excluir</button>
+                            </td>
+                        `;
+                    });
+                    addEventListeners();
+                } catch (error) {
+                    console.error('Erro ao carregar usuários:', error);
+                    alert('Erro ao carregar usuários. Verifique o console.');
+                }
+            }
+
+            // Função para adicionar event listeners aos botões
+            function addEventListeners() {
+                document.querySelectorAll('.btn-edit').forEach(button => {
+                    button.onclick = (e) => editUser(e.target.dataset.id);
+                });
+                document.querySelectorAll('.btn-danger').forEach(button => {
+                    button.onclick = (e) => deleteUser(e.target.dataset.id);
+                });
+            }
+
+            // Função para preencher o formulário para edição
+            async function editUser(id) {
+                try {
+                    const response = await fetch(`/api/admin/users/${id}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const user = await response.json();
+
+                    formTitle.textContent = 'Editar Usuário';
+                    userIdInput.value = user.id;
+                    usernameInput.value = user.username;
+                    emailInput.value = user.email;
+                    enabledInput.checked = user.enabled;
+                    passwordInput.value = ''; // Limpa a senha para não exibir a hash
+
+                    // Marca os papéis do usuário
+                    roleCheckboxes.forEach(checkbox => {
+                        checkbox.checked = user.papeis.some(p => p.nome === checkbox.value);
+                    });
+
+                    cancelEditButton.classList.remove('hidden');
+                    userForm.scrollIntoView({ behavior: 'smooth' }); // Rola para o formulário
+                } catch (error) {
+                    console.error('Erro ao buscar usuário para edição:', error);
+                    alert('Erro ao carregar dados do usuário para edição. Verifique o console.');
+                }
+            }
+
+            // Função para excluir usuário
+            async function deleteUser(id) {
+                if (!confirm('Tem certeza que deseja excluir este usuário?')) {
+                    return;
+                }
+                try {
+                    const response = await fetch(`/api/admin/users/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    alert('Usuário excluído com sucesso!');
+                    loadUsers(); // Recarrega a lista
+                } catch (error) {
+                    console.error('Erro ao excluir usuário:', error);
+                    alert('Erro ao excluir usuário. Verifique o console.');
+                }
+            }
+
+            // Envio do formulário (Criar/Atualizar)
+            userForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const id = userIdInput.value;
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `/api/admin/users/${id}` : '/api/admin/users';
+
+                const selectedRoles = Array.from(roleCheckboxes)
+                                           .filter(checkbox => checkbox.checked)
+                                           .map(checkbox => checkbox.value);
+
+                const userData = {
+                    username: usernameInput.value,
+                    email: emailInput.value,
+                    senha: passwordInput.value, // Envia a senha, mesmo que vazia para PUT
+                    enabled: enabledInput.checked,
+                    roleNames: selectedRoles // Envia os nomes dos papéis
+                };
+
+                // Remove a senha do objeto se for uma atualização e o campo estiver vazio
+                if (method === 'PUT' && userData.senha === '') {
+                    delete userData.senha;
+                }
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`);
+                    }
+
+                    alert(`Usuário ${id ? 'atualizado' : 'criado'} com sucesso!`);
+                    userForm.reset(); // Limpa o formulário
+                    resetForm();
+                    loadUsers(); // Recarrega a lista
+                } catch (error) {
+                    console.error('Erro ao salvar usuário:', error);
+                    alert(`Erro ao salvar usuário: ${error.message}. Verifique o console.`);
+                }
+            });
+
+            // Resetar o formulário para o estado de "criar novo"
+            function resetForm() {
+                formTitle.textContent = 'Criar Novo Usuário';
+                userIdInput.value = '';
+                passwordInput.value = '';
+                enabledInput.checked = true; // Volta para ativo por padrão
+                roleCheckboxes.forEach(checkbox => checkbox.checked = false); // Desmarca todos os papéis
+                cancelEditButton.classList.add('hidden');
+            }
+
+            cancelEditButton.addEventListener('click', () => {
+                userForm.reset();
+                resetForm();
+            });
+
+            loadUsers(); // Carrega os usuários ao iniciar a página
+        });
+    </script>
+</body>
+</html>

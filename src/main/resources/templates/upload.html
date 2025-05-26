@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+    <title>Upload NF-e</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Upload de Arquivo XML</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Selecione o arquivo XML</label>
+                        <input type="file" name="arquivo" class="form-control" accept=".xml" required>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> Enviar Arquivo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

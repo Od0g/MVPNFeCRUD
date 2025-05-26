@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NF-e Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .header {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .header h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #2563eb; /* hover:bg-blue-600 */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<body>
+    <div th:replace="fragments/header :: body"></div>
+
+    <main class="p-6">
+        </main>
+</body>
+
+    <main class="p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Bem-vindo(a), <span sec:authentication="name">Usuário</span>!</h2>
+
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Status das NF-e</h3>
+                    <canvas id="chartStatusNFe"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Movimentação Mensal de NF-e</h3>
+                    <canvas id="chartMovimentacaoMensal"></canvas>
+                </div>
+            </div>
+            </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para buscar dados da API
+            async function fetchData(url) {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    // Se a resposta não for OK, tenta ler a mensagem de erro
+                    const errorText = await response.text();
+                    console.error(`Erro HTTP! Status: ${response.status}, Mensagem: ${errorText}`);
+                    throw new Error(`Erro ao carregar dados: ${response.statusText || 'Erro desconhecido'}`);
+                }
+                return response.json();
+            }
+
+            // Gráfico de Status da NF-e
+            async function renderChartStatusNFe() {
+                try {
+                    const data = await fetchData('/api/dashboard/statusNFe');
+                    const ctx = document.getElementById('chartStatusNFe').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'pie', // Ou 'doughnut'
+                        data: {
+                            labels: data.labels, // Ex: ['Autorizada', 'Cancelada', 'Denegada']
+                            datasets: [{
+                                data: data.values, // Ex: [150, 20, 5]
+                                backgroundColor: [
+                                    'rgba(75, 192, 192, 0.8)', // Verde para Autorizada
+                                    'rgba(255, 99, 132, 0.8)', // Vermelho para Cancelada
+                                    'rgba(255, 205, 86, 0.8)'  // Amarelo para Denegada
+                                ],
+                                borderColor: [
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 205, 86, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Status das NF-e'
+                                }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Erro ao carregar dados do status da NF-e:', error);
+                    document.getElementById('chartStatusNFe').parentElement.innerHTML = '<p class="text-red-500">Não foi possível carregar o gráfico de status da NF-e. Verifique o console para mais detalhes.</p>';
+                }
+            }
+
+            // Gráfico de Movimentação Mensal
+            async function renderChartMovimentacaoMensal() {
+                try {
+                    const data = await fetchData('/api/dashboard/movimentacaoMensal');
+                    const ctx = document.getElementById('chartMovimentacaoMensal').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar', // Ou 'line'
+                        data: {
+                            labels: data.labels, // Ex: ['Jan', 'Fev', 'Mar', 'Abr']
+                            datasets: [{
+                                label: 'Quantidade de NF-e',
+                                data: data.values, // Ex: [120, 150, 130, 180]
+                                backgroundColor: 'rgba(54, 162, 235, 0.8)', // Azul
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Movimentação Mensal de NF-e'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Quantidade'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Mês'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Erro ao carregar dados de movimentação mensal:', error);
+                    document.getElementById('chartMovimentacaoMensal').parentElement.innerHTML = '<p class="text-red-500">Não foi possível carregar o gráfico de movimentação mensal. Verifique o console para mais detalhes.</p>';
+                }
+            }
+
+            // Renderiza os gráficos se estiver na página do dashboard
+            if (window.location.pathname === '/dashboard') {
+                renderChartStatusNFe();
+                renderChartMovimentacaoMensal();
+            }
+        });
+    </script>
+</body>
+</html>

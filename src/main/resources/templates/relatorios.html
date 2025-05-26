@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - NF-e Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .header {
+            background-color: #3b82f6; /* bg-blue-500 */
+            color: white;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .header h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #2563eb; /* hover:bg-blue-600 */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Relatórios</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a th:href="@{/dashboard}" class="nav-link">Dashboard</a></li>
+                <li sec:authorize="hasAnyAuthority('RELATORIOS_GERAR', 'ROLE_ADMIN')">
+                    <a th:href="@{/relatorios}" class="nav-link bg-blue-600">Relatórios</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/usuarios}" class="nav-link">Gerenciar Usuários</a>
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="nav-link bg-red-500 hover:bg-red-600">Sair</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="p-6 container mx-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Relatórios de NF-e</h2>
+
+        <div class="card">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Gerar Relatório</h3>
+            <form id="report-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">Data Inicial:</label>
+                        <input type="date" id="startDate" name="startDate" class="form-input">
+                    </div>
+                    <div>
+                        <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">Data Final:</label>
+                        <input type="date" id="endDate" name="endDate" class="form-input">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="fornecedor" class="block text-gray-700 text-sm font-bold mb-2">Fornecedor:</label>
+                        <input type="text" id="fornecedor" name="fornecedor" class="form-input" placeholder="Nome do Fornecedor">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status:</label>
+                        <select id="status" name="status" class="form-input">
+                            <option value="">Todos</option>
+                            <option value="RECEBIDA">Recebida</option>
+                            <option value="EXPEDIDA">Expedida</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" id="generatePdf" class="btn-primary">Gerar PDF</button>
+                    <button type="button" id="generateCsv" class="btn-primary">Gerar CSV</button>
+                </div>
+            </form>
+
+            <div id="report-results" class="mt-8">
+                </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generatePdfButton = document.getElementById('generatePdf');
+            const generateCsvButton = document.getElementById('generateCsv');
+            const reportForm = document.getElementById('report-form');
+            const reportResultsDiv = document.getElementById('report-results');
+
+            async function generateReport(format) {
+                const formData = new FormData(reportForm);
+                const params = new URLSearchParams();
+                for (const [key, value] of formData.entries()) {
+                    if (value) { // Apenas adiciona parâmetros com valor
+                        params.append(key, value);
+                    }
+                }
+
+                const url = `/api/relatorios/nfe/${format}?${params.toString()}`;
+
+                try {
+                    reportResultsDiv.innerHTML = '<p class="text-blue-500">Gerando relatório...</p>';
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': format === 'pdf' ? 'application/pdf' : 'text/csv'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Erro ao gerar relatório: ${response.status} - ${errorText}`);
+                    }
+
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = `relatorio_nfe.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(downloadUrl);
+                    reportResultsDiv.innerHTML = '<p class="text-green-500">Relatório gerado e download iniciado!</p>';
+
+                } catch (error) {
+                    console.error('Erro ao gerar relatório:', error);
+                    reportResultsDiv.innerHTML = `<p class="text-red-500">Erro: ${error.message}. Verifique os filtros e suas permissões.</p>`;
+                }
+            }
+
+            generatePdfButton.addEventListener('click', () => generateReport('pdf'));
+            generateCsvButton.addEventListener('click', () => generateReport('csv'));
+        });
+    </script>
+</body>
+</html>

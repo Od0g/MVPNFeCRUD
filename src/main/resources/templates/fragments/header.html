@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    </head>
+<body>
+    <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center rounded-b-xl">
+        <h1 class="text-2xl font-bold">NF-e Control</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a th:href="@{/dashboard}" class="nav-link">Dashboard</a></li>
+                <li><a th:href="@{/upload}" class="nav-link">Upload NF-e</a></li>
+                <li sec:authorize="hasAnyAuthority('RELATORIOS_GERAR', 'ROLE_ADMIN')">
+                    <a th:href="@{/relatorios}" class="nav-link">Relatórios</a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/usuarios}" class="nav-link">Gerenciar Usuários</a>
+                </li>
+                <li>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit" class="nav-link bg-red-500 hover:bg-red-600">Sair</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+</body>
+</html>
