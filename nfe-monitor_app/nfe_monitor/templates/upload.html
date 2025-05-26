@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Upload NF-e XML - Monitor NF-e{% endblock %}
+
+{% block content %}
+    <h1>Upload de Arquivo XML da NF-e</h1>
+    <p>Faça o upload de um arquivo XML de NF-e para simular o recebimento.</p>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="xml_file">Selecione o arquivo XML:</label>
+        <input type="file" name="xml_file" id="xml_file" accept=".xml" required>
+        <br>
+        <input type="submit" value="Fazer Upload">
+    </form>
+{% endblock %}

@@ -1,0 +1,5 @@
+Flask
+Flask-SQLAlchemy
+lxml
+pandas
+python-dotenv

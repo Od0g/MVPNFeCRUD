@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}NF-e Recebidas - Monitor NF-e{% endblock %}
+
+{% block content %}
+    <h1>NF-e Recebidas/Gerenciadas</h1>
+
+    {% if notes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Chave de Acesso</th>
+                <th>Número</th>
+                <th>Emitente</th>
+                <th>Valor</th>
+                <th>Data Emissão</th>
+                <th>Data Recebimento</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for note in notes %}
+            <tr>
+                <td>{{ note.chave_acesso }}</td>
+                <td>{{ note.numero }}</td>
+                <td>{{ note.emitente_nome }}</td>
+                <td>R$ {{ "%.2f"|format(note.valor_total) }}</td>
+                <td>{{ note.data_emissao.strftime('%Y-%m-%d') }}</td>
+                <td>{{ note.data_recebimento.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ note.status }}</td>
+                <td>
+                    <a href="{{ url_for('main.nfe_detail', nfe_id=note.id) }}" class="button">Ver Detalhes</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Nenhuma NF-e encontrada. Faça o <a href="{{ url_for('main.upload_nfe') }}">upload de um XML</a> para começar.</p>
+    {% endif %}
+{% endblock %}

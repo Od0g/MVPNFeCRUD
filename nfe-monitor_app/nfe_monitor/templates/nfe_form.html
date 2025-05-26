@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Editar NF-e - Monitor NF-e{% endblock %}
+
+{% block content %}
+    <h1>Editar NF-e: {{ nfe.numero }}</h1>
+    <form method="POST">
+        <label for="status">Status da NF-e:</label>
+        <select name="status" id="status" required>
+            <option value="Pendente" {% if nfe.status == 'Pendente' %}selected{% endif %}>Pendente</option>
+            <option value="Recebida" {% if nfe.status == 'Recebida' %}selected{% endif %}>Recebida</option>
+            <option value="Expedida" {% if nfe.status == 'Expedida' %}selected{% endif %}>Expedida</option>
+            <option value="Devolvida" {% if nfe.status == 'Devolvida' %}selected{% endif %}>Devolvida</option>
+            <option value="Cancelada" {% if nfe.status == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+        </select>
+
+        <h2>Dados de Recebimento</h2>
+        <label for="responsavel_recebimento">Responsável pelo Recebimento:</label>
+        <input type="text" id="responsavel_recebimento" name="responsavel_recebimento" value="{{ nfe.responsavel_recebimento or '' }}">
+
+        <label for="turno_recebimento">Turno de Operação (Recebimento):</label>
+        <input type="text" id="turno_recebimento" name="turno_recebimento" value="{{ nfe.turno_recebimento or '' }}">
+
+        <label for="quantidade_itens">Quantidade de Itens (Estimada):</label>
+        <input type="number" id="quantidade_itens" name="quantidade_itens" value="{{ nfe.quantidade_itens or '' }}">
+
+        <h2>Dados de Expedição</h2>
+        <label for="destino_expedicao">Destino da Mercadoria (Expedição):</label>
+        <input type="text" id="destino_expedicao" name="destino_expedicao" value="{{ nfe.destino_expedicao or '' }}">
+
+        <label for="responsavel_expedicao">Responsável pela Expedição:</label>
+        <input type="text" id="responsavel_expedicao" name="responsavel_expedicao" value="{{ nfe.responsavel_expedicao or '' }}">
+
+        <label for="email_responsavel_entrega">Email do Responsável pela Entrega (Devoluções):</label>
+        <input type="email" id="email_responsavel_entrega" name="email_responsavel_entrega" value="{{ nfe.email_responsavel_entrega or '' }}">
+
+        <br>
+        <input type="submit" value="Salvar Alterações">
+        <a href="{{ url_for('main.nfe_detail', nfe_id=nfe.id) }}" class="button button-danger">Cancelar</a>
+    </form>
+{% endblock %}

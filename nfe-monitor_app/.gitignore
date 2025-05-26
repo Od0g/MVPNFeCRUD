@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+instance/
+.env
+nfe_monitor_app.db
+storage/

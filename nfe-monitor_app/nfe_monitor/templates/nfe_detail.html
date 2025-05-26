@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes da NF-e - Monitor NF-e{% endblock %}
+
+{% block content %}
+    <h1>Detalhes da NF-e: {{ nfe.numero }}</h1>
+    <p><strong>Chave de Acesso:</strong> {{ nfe.chave_acesso }}</p>
+    <p><strong>Emitente:</strong> {{ nfe.emitente_nome }} (CNPJ: {{ nfe.emitente_cnpj }})</p>
+    <p><strong>Destinatário:</strong> {{ nfe.destinatario_nome }} (CNPJ/CPF: {{ nfe.destinatario_cnpj }})</p>
+    <p><strong>Valor Total:</strong> R$ {{ "%.2f"|format(nfe.valor_total) }}</p>
+    <p><strong>Data de Emissão:</strong> {{ nfe.data_emissao.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <p><strong>Data de Recebimento (Upload):</strong> {{ nfe.data_recebimento.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <p><strong>Status Atual:</strong> {{ nfe.status }}</p>
+
+    <h2>Controle Operacional</h2>
+    <p><strong>Responsável Recebimento:</strong> {{ nfe.responsavel_recebimento or 'Não registrado' }}</p>
+    <p><strong>Turno Recebimento:</strong> {{ nfe.turno_recebimento or 'Não registrado' }}</p>
+    <p><strong>Quantidade de Itens (Estimada):</strong> {{ nfe.quantidade_itens or 'Não registrado' }}</p>
+    <p><strong>Destino Expedição:</strong> {{ nfe.destino_expedicao or 'Não registrado' }}</p>
+    <p><strong>Responsável Expedição:</strong> {{ nfe.responsavel_expedicao or 'Não registrado' }}</p>
+    <p><strong>Data Expedição:</strong> {% if nfe.data_expedicao %}{{ nfe.data_expedicao.strftime('%Y-%m-%d %H:%M:%S') }}{% else %}Não expedida{% endif %}</p>
+    <p><strong>Email Responsável Entrega (Devolução/Expedição):</strong> {{ nfe.email_responsavel_entrega or 'Não registrado' }}</p>
+
+    <p>
+        <a href="{{ url_for('main.download_xml', nfe_id=nfe.id) }}" class="button">Download XML</a>
+        <a href="{{ url_for('main.edit_nfe', nfe_id=nfe.id) }}" class="button">Editar Status/Operação</a>
+        <a href="{{ url_for('main.index') }}" class="button">Voltar para a Lista</a>
+    </p>
+{% endblock %}
