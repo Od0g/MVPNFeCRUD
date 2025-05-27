@@ -1,0 +1,15 @@
+Estrutura do Projeto
+
+seu_aplicativo/
+├── app.py              # Lógica principal do Flask
+├── database.py         # Configuração do banco de dados
+├── templates/          # Arquivos HTML da interface
+│   ├── layout.html
+│   ├── index.html
+│   ├── recebimento.html
+│   ├── expedicao.html
+│   ├── relatorio.html
+│   ├── cadastro.html
+│   └── protocolo.html
+└── static/             # Arquivos CSS e JS (opcional, para estilização)
+    └── style.css
