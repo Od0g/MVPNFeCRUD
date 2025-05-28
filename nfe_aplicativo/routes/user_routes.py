@@ -2,11 +2,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from database import db, Usuario
+import functools # <--- ADICIONE ESTA LINHA
 
 user = Blueprint('user', __name__)
 
 # Decorador para verificar se o usuário é administrador
 def admin_required(f):
+    @functools.wraps(f) # <--- ADICIONE ESTA LINHA
     @login_required
     def decorated_function(*args, **kwargs):
         if not current_user.is_admin():
@@ -24,7 +26,7 @@ def cadastro():
         funcao = request.form['funcao']
         email = request.form['email']
         status = request.form['status']
-        perfil = request.form['perfil'] # Captura o perfil do formulário
+        perfil = request.form['perfil' ] # Captura o perfil do formulário
 
         # Validação extra: Matricula e Email únicos
         if Usuario.query.filter_by(matricula=matricula).first():
