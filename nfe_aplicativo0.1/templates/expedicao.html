@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Registro de Expedição de NF-e</h2>
+
+    <form method="POST">
+        <label for="recebimento_id">NF-e a ser Expedida (Pendente):</label>
+        <select id="recebimento_id" name="recebimento_id" required>
+            <option value="">Selecione uma NF-e pendente</option>
+            {% for recebimento in recebimentos_pendentes %}
+                <option value="{{ recebimento.id }}">
+                    {{ recebimento.numero_nfe }} ({{ recebimento.fornecedor }} - {{ recebimento.data_recebimento.strftime('%d/%m/%Y') }})
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="responsavel_entrega_expedicao">Responsável pela Entrega (Expedição):</label>
+        <input type="text" id="responsavel_entrega_expedicao" name="responsavel_entrega_expedicao" required><br><br>
+
+        <label for="responsavel_recebimento_expedicao">Responsável pelo Recebimento (Expedição):</label>
+        <select id="responsavel_recebimento_expedicao" name="responsavel_recebimento_expedicao" required>
+            <option value="">Selecione um usuário</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nome }} ({{ usuario.matricula }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno">
+            <option value="Manha">Manhã</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noite">Noite</option>
+        </select><br><br>
+
+        <button type="submit">Registrar Expedição</button>
+    </form>
+{% endblock %}

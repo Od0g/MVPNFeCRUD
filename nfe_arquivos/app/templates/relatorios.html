@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block title %}Relatórios{% endblock %}
+{% block content %}
+<h2>Filtrar Relatórios</h2>
+<form method="get" action="/relatorios">
+    Período: <input type="date" name="inicio"> até <input type="date" name="fim"><br>
+    Fornecedor: <input name="fornecedor"><br>
+    Tipo de operação:
+    <select name="tipo">
+        <option value="recebimento">Recebimento</option>
+        <option value="expedicao">Expedição</option>
+    </select><br>
+    <button type="submit">Filtrar</button>
+</form>
+
+<h3>Resultado</h3>
+<table border="1">
+    <tr><th>Chave</th><th>Fornecedor</th><th>Data</th><th>Tipo</th><th>Responsável</th></tr>
+    {% for op in operacoes %}
+        <tr>
+            <td>{{ op.chave }}</td>
+            <td>{{ op.fornecedor }}</td>
+            <td>{{ op.data }}</td>
+            <td>{{ op.tipo }}</td>
+            <td>{{ op.responsavel }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

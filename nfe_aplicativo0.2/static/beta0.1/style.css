@@ -1,0 +1,259 @@
+/* Basic Reset & Body Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: column; /* Stack items on small screens */
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.site-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem; /* Adjust for mobile */
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; /* Hidden by default on small screens */
+    width: 100%; /* Take full width */
+    text-align: center;
+}
+
+.nav-list li {
+    margin-bottom: 0.5rem;
+}
+
+.nav-list a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+    border-radius: 4px;
+}
+
+.nav-list a:hover {
+    background-color: #555;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex; /* Show hamburger icon */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    position: absolute; /* Position it for mobile */
+    right: 1rem;
+    top: 1.5rem;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+/* JavaScript will add this class */
+.nav-list.active {
+    display: block;
+}
+
+/* Main Content Area */
+.main-content {
+    padding: 20px;
+    max-width: 1200px; /* Max width for larger screens */
+    margin: 20px auto; /* Center the content */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Report Container & H2 */
+.report-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+/* Table Responsiveness */
+.table-responsive {
+    overflow-x: auto; /* Enables horizontal scrolling for the table */
+    -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* Prevent text wrapping in cells by default */
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #555;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.status-concluido {
+    background-color: #e6ffe6; /* Light green for concluded */
+}
+
+.status-pendente {
+    background-color: #fff0e6; /* Light orange for pending (example) */
+}
+
+/* Mobile Table Specific Styles */
+@media screen and (max-width: 768px) {
+    table {
+        border: 0; /* Remove table border for mobile */
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block; /* Make rows behave like blocks */
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block; /* Make cells behave like blocks */
+        font-size: .8em;
+        text-align: right; /* Align content to right */
+    }
+
+    table td::before {
+        /*
+        * That's where the data-label magic happens.
+        * These are the "headers" for the mobile view
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0; /* No bottom border for the last cell */
+    }
+
+    .menu-toggle {
+        display: flex; /* Show hamburger */
+    }
+
+    .nav-list {
+        display: none; /* Hide nav list by default on mobile */
+        flex-direction: column;
+        background-color: #444; /* Darker background for collapsed menu */
+        width: 100%;
+        position: absolute;
+        top: 4.5rem; /* Below header */
+        left: 0;
+        z-index: 1000;
+        padding: 1rem 0;
+    }
+
+    .nav-list.active {
+        display: flex; /* Show when active */
+    }
+
+    .site-title {
+        font-size: 1rem; /* Smaller title on mobile */
+        text-align: left;
+        flex-grow: 1; /* Allows title to take available space */
+    }
+
+    .main-nav {
+        flex-direction: row; /* Align title and toggle horizontally */
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+
+/* Larger Screens (Desktop) */
+@media screen and (min-width: 769px) {
+    .menu-toggle {
+        display: none; /* Hide hamburger */
+    }
+
+    .main-nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto; /* Center nav content */
+    }
+
+    .site-title {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .nav-list {
+        display: flex; /* Show navigation items in a row */
+        flex-direction: row;
+        margin-left: auto; /* Push items to the right */
+    }
+
+    .nav-list li {
+        margin-bottom: 0;
+        margin-left: 1.5rem; /* Space between nav items */
+    }
+
+    table th, table td {
+        white-space: normal; /* Allow text wrapping on larger screens */
+    }
+}
+
+/* Footer Styles */
+.main-footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}

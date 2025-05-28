@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Sistema NF-e{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Login</a> |
+        <a href="/nfe/gestao">Gestão de NF-e</a> |
+        <a href="/operacao">Controle Operacional</a> |
+        <a href="/relatorios">Relatórios</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

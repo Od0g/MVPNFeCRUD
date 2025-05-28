@@ -1,36 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Login - NF-e MVP</title>
-</head>
-<body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    <label>Usuário: <input type="text" id="username" required></label><br>
-    <label>Senha: <input type="password" id="password" required></label><br>
+{% extends 'layout.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h2>Login</h2>
+<form method="post" action="/auth/login" enctype="application/json">
+    <input name="username" placeholder="Usuário"><br>
+    <input name="password" type="password" placeholder="Senha"><br>
     <button type="submit">Entrar</button>
-  </form>
-
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const res = await fetch('/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: document.getElementById("username").value,
-          password: document.getElementById("password").value
-        })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.access_token);
-        window.location.href = "/upload";
-      } else {
-        alert(data.message);
-      }
-    });
-  </script>
-</body>
-</html>
+</form>
+{% endblock %}

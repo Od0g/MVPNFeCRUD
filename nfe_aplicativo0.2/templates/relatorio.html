@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Relatório Geral de NF-e's</h2>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <h3>Notas Recebidas vs. Expedidas por Mês</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>Status das Notas</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    {% if dados_relatorio %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Rec.</th>
+                        <th>Fornecedor</th>
+                        <th>Número NF-e</th>
+                        <th>Chave NF-e</th>
+                        <th>Resp. Ent. Rec.</th>
+                        <th>Resp. Rec. Rec.</th>
+                        <th>Mat. Rec. Rec.</th>
+                        <th>Turno Rec.</th>
+                        <th>Status</th>
+                        <th>Data Exp.</th>
+                        <th>ID Exp.</th>
+                        <th>Resp. Rec. Exp.</th>
+                        <th>Mat. Rec. Exp.</th>
+                        <th>Turno Exp.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in dados_relatorio %}
+                    <tr class="{{ 'status-concluido' if row.status == 'Concluído' else 'status-pendente' }}">
+                        <td data-label="Data Rec.">{{ row.data_recebimento.strftime('%d/%m/%Y %H:%M') if row.data_recebimento else '' }}</td>
+                        <td data-label="Fornecedor">{{ row.fornecedor }}</td>
+                        <td data-label="Número NF-e">{{ row.numero_nfe }}</td>
+                        <td data-label="Chave NF-e">{{ row.chave_nfe }}</td>
+                        <td data-label="Resp. Ent. Rec.">{{ row.resp_entrega_rec }}</td>
+                        <td data-label="Resp. Rec. Rec.">{{ row.resp_recebimento_nome }}</td>
+                        <td data-label="Mat. Rec. Rec.">{{ row.resp_recebimento_matricula }}</td>
+                        <td data-label="Turno Rec.">{{ row.turno_rec }}</td>
+                        <td data-label="Status">{{ row.status }}</td>
+                        <td data-label="Data Exp.">{{ row.data_expedicao.strftime('%d/%m/%Y %H:%M') if row.data_expedicao else '' }}</td>
+                        <td data-label="ID Exp.">{{ row.expedicao_id if row.expedicao_id else '' }}</td>
+                        <td data-label="Resp. Rec. Exp.">{{ row.resp_recebimento_exp_nome if row.resp_recebimento_exp_nome else '' }}</td>
+                        <td data-label="Mat. Rec. Exp.">{{ row.resp_recebimento_exp_matricula if row.resp_recebimento_exp_matricula else '' }}</td>
+                        <td data-label="Turno Exp.">{{ row.turno_exp if row.turno_exp else '' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Nenhum dado de NF-e disponível para o relatório.</p>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Dados passados do Flask para o JavaScript
+        const labelsMeses = {{ labels_meses | tojson }};
+        const dataRecebidasMensal = {{ data_recebidas_mensal | tojson }};
+        const dataExpedidasMensal = {{ data_expedidas_mensal | tojson }};
+        const totalPendentes = {{ total_pendentes | tojson }};
+        const totalConcluidas = {{ total_concluidas | tojson }};
+
+        // Gráfico de Linhas (Recebidas vs. Expedidas por Mês)
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: labelsMeses,
+                datasets: [
+                    {
+                        label: 'Notas Recebidas',
+                        data: dataRecebidasMensal,
+                        borderColor: 'rgb(54, 162, 235)', // Azul
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        tension: 0.1,
+                        fill: false
+                    },
+                    {
+                        label: 'Notas Expedidas',
+                        data: dataExpedidasMensal,
+                        borderColor: 'rgb(255, 99, 132)', // Vermelho
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.1,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Número de Notas'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mês/Ano'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    title: {
+                        display: false, // Título já no <h3>
+                        text: 'Notas Recebidas vs. Expedidas por Mês'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Pizza (Status das Notas)
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Pendentes', 'Concluídas'],
+                datasets: [{
+                    data: [totalPendentes, totalConcluidas],
+                    backgroundColor: [
+                        'rgb(255, 205, 86)', // Amarelo para Pendentes
+                        'rgb(75, 192, 192)'  // Verde para Concluídas
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false, // Título já no <h3>
+                        text: 'Status das Notas'
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

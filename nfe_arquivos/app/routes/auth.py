@@ -23,10 +23,12 @@ def register():
 
 @bp.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    user = User.query.filter_by(username=data.get('username')).first()
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-    if user and user.check_password(data.get('password')):
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.check_password(password):
         token = create_access_token(identity={'id': user.id, 'role': user.role})
         return jsonify({'access_token': token}), 200
     return jsonify({'message': 'Credenciais inválidas'}), 401

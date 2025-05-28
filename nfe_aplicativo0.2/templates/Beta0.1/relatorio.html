@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Relatório Geral de NF-e's</h2>
+
+    {% if dados_relatorio %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Data Rec.</th>
+                    <th>Fornecedor</th>
+                    <th>Número NF-e</th>
+                    <th>Chave NF-e</th>
+                    <th>Resp. Ent. Rec.</th>
+                    <th>Resp. Rec. Rec.</th>
+                    <th>Mat. Rec. Rec.</th>
+                    <th>Turno Rec.</th>
+                    <th>Status</th>
+                    <th>Data Exp.</th>
+                    <th>ID Exp.</th>
+                    <th>Resp. Rec. Exp.</th>
+                    <th>Mat. Rec. Exp.</th>
+                    <th>Turno Exp.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in dados_relatorio %}
+                <tr class="{{ 'status-concluido' if row.status == 'Concluído' else 'status-pendente' }}">
+                    <td>{{ row.data_recebimento.strftime('%d/%m/%Y %H:%M') if row.data_recebimento else '' }}</td>
+                    <td>{{ row.fornecedor }}</td>
+                    <td>{{ row.numero_nfe }}</td>
+                    <td>{{ row.chave_nfe }}</td>
+                    <td>{{ row.resp_entrega_rec }}</td>
+                    <td>{{ row.resp_recebimento_nome }}</td>
+                    <td>{{ row.resp_recebimento_matricula }}</td>
+                    <td>{{ row.turno_rec }}</td>
+                    <td>{{ row.status }}</td>
+                    <td>{{ row.data_expedicao.strftime('%d/%m/%Y %H:%M') if row.data_expedicao else '' }}</td>
+                    <td>{{ row.expedicao_id if row.expedicao_id else '' }}</td>
+                    <td>{{ row.resp_recebimento_exp_nome if row.resp_recebimento_exp_nome else '' }}</td>
+                    <td>{{ row.resp_recebimento_exp_matricula if row.resp_recebimento_exp_matricula else '' }}</td>
+                    <td>{{ row.turno_exp if row.turno_exp else '' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum dado de NF-e disponível para o relatório.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block title %}Gestão de NF-e{% endblock %}
+{% block content %}
+<h2>Upload de NF-e</h2>
+<form method="post" action="/nfe/upload" enctype="multipart/form-data">
+    <input type="file" name="xml" required>
+    <button type="submit">Enviar</button>
+</form>
+{% endblock %}

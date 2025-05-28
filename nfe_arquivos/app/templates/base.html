@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Controle NF-e</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Início</a> |
+        <a href="{{ url_for('nfe.upload_form') }}">Gestão de NF-e</a> |
+        <a href="{{ url_for('operacao.recebimento_form') }}">Recebimento</a> |
+        <a href="{{ url_for('operacao.expedicao_form') }}">Expedição</a> |
+        <a href="{{ url_for('relatorios.historico') }}">Relatórios</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

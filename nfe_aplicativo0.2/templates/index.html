@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="welcome-section"> {# Usaremos uma nova classe para estilização específica #}
+        <h2>Bem-vindo ao CONTROLE GERAL DE DEVOLUÇÃO E TRANSFERENCIA DE PEÇAS</h2>
+        <p>Use o menu acima para navegar pelas funcionalidades do sistema.</p>
+        {% if logged_in %}
+            <p>Você está logado como: <strong>{{ current_user_name }}</strong></p>
+        {% else %}
+            <p>Por favor, <a href="{{ url_for('login') }}">faça login</a> para acessar as funcionalidades.</p>
+        {% endif %}
+    </div>
+{% endblock %}

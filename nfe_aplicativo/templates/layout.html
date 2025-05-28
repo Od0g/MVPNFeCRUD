@@ -11,11 +11,19 @@
         <h1>Gerenciador de NF-e</h1>
         <nav>
             <a href="{{ url_for('index') }}">Início</a>
-            <a href="{{ url_for('recebimento') }}">Recebimento</a>
-            <a href="{{ url_for('expedicao') }}">Expedição</a>
-            <a href="{{ url_for('relatorio') }}">Relatório</a>
-            <a href="{{ url_for('cadastro') }}">Cadastro</a>
-            <a href="{{ url_for('protocolo') }}">Protocolo</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('nfe.recebimento') }}">Recebimento</a>
+                <a href="{{ url_for('nfe.expedicao') }}">Expedição</a>
+                <a href="{{ url_for('report.relatorio') }}">Relatório</a>
+                <a href="{{ url_for('report.protocolo') }}">Protocolo</a>
+                {% if current_user.is_admin() %}
+                    <a href="{{ url_for('user.cadastro') }}">Cadastro de Usuários</a>
+                {% endif %}
+                <span class="user-info">Olá, {{ current_user.nome }} ({{ current_user.perfil }})</span>
+                <a href="{{ url_for('auth.logout') }}" class="logout-link">Sair</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Login</a>
+            {% endif %}
         </nav>
     </header>
     <main>

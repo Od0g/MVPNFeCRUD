@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Gerar Protocolo</h2>
+
+    <form method="POST">
+        <label for="data_protocolo">Data do Protocolo:</label>
+        <input type="date" id="data_protocolo" name="data_protocolo" required><br><br>
+
+        <label for="periodo">Período de Análise:</label>
+        <select id="periodo" name="periodo" required>
+            <option value="Dia">Dia</option>
+            <option value="Mês">Mês</option>
+            <option value="Ano">Ano</option>
+        </select><br><br>
+
+        <label for="responsavel_protocolo">Responsável pelo Protocolo:</label>
+        <select id="responsavel_protocolo" name="responsavel_protocolo" required>
+            <option value="">Selecione um usuário</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nome }} ({{ usuario.matricula }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="observacoes">Observações:</label><br>
+        <textarea id="observacoes" name="observacoes" rows="4" cols="50"></textarea><br><br>
+
+        <button type="submit">Gerar e Salvar Protocolo</button>
+    </form>
+
+    <h3>Protocolos Gerados</h3>
+    {% if protocolos_registrados %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Data Protocolo</th>
+                    <th>Período</th>
+                    <th>Notas Recebidas</th>
+                    <th>Notas Expedidas</th>
+                    <th>Responsável</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for protocolo in protocolos_registrados %}
+                <tr>
+                    <td>{{ protocolo.data_protocolo.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ protocolo.periodo }}</td>
+                    <td>{{ protocolo.total_notas_recebidas }}</td>
+                    <td>{{ protocolo.total_notas_expedidas }}</td>
+                    <td>{{ protocolo.responsavel_protocolo.nome }}</td>
+                    <td>{{ protocolo.observacoes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum protocolo gerado ainda.</p>
+    {% endif %}
+{% endblock %}

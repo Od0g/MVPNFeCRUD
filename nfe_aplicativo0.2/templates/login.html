@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-login">
+    <h2>Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="matricula">Matrícula:</label>
+        <input type="text" id="matricula" name="matricula" required>
+
+        <label for="password">Senha:</label> {# Alterado de 'senha' para 'password' #}
+        <input type="password" id="password" name="password" required> {# Alterado de 'senha' para 'password' #}
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}

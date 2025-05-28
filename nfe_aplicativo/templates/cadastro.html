@@ -21,35 +21,44 @@
             <option value="Inativo">Inativo</option>
         </select><br><br>
 
+        <label for="perfil">Perfil:</label>
+        <select id="perfil" name="perfil">
+            <option value="Operador">Operador</option>
+            <option value="Qualidade">Qualidade</option>
+            <option value="Gestor">Gestor</option>
+        </select><br><br>
+
         <button type="submit">Cadastrar Usuário</button>
     </form>
 
     <h3>Usuários Cadastrados</h3>
     {% if usuarios %}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Matrícula</th>
-                    <th>Função</th>
-                    <th>E-mail</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for usuario in usuarios %}
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.nome }}</td>
-                    <td>{{ usuario.matricula }}</td>
-                    <td>{{ usuario.funcao }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.status }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Matrícula</th>
+                        <th>Função</th>
+                        <th>E-mail</th>
+                        <th>Status</th>
+                        <th>Perfil</th> </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nome }}</td>
+                        <td>{{ usuario.matricula }}</td>
+                        <td>{{ usuario.funcao }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.status }}</td>
+                        <td>{{ usuario.perfil }}</td> </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p>Nenhum usuário cadastrado ainda.</p>
     {% endif %}

@@ -282,3 +282,32 @@ footer {
         max-width: none; /* Remove a largura máxima */
     }
 }
+/* Adicione no final do seu style.css existente */
+
+.user-info {
+    color: #f8f8f8;
+    margin-left: 20px;
+    margin-right: 15px;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+.logout-link {
+    background-color: #e74c3c; /* Vermelho */
+    color: white !important; /* !important para sobrescrever outros estilos de link */
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    transition: background-color 0.3s ease;
+}
+
+.logout-link:hover {
+    background-color: #c0392b !important;
+}
+
+/* Ajuste o espaçamento da navegação para acomodar os novos elementos */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza todos os itens da nav */
+    flex-wrap: wrap; /* Garante que os itens quebrem a linha se a tela for pequena */
+}

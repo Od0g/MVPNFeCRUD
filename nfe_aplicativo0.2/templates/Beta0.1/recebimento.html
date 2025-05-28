@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Registro de Recebimento de NF-e</h2>
+
+    <form method="POST">
+        <label for="responsavel_entrega">Responsável pela Entrega:</label>
+        <input type="text" id="responsavel_entrega" name="responsavel_entrega" required><br><br>
+
+        <label for="responsavel_recebimento">Responsável pelo Recebimento:</label>
+        <select id="responsavel_recebimento" name="responsavel_recebimento" required>
+            <option value="">Selecione um usuário</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nome }} ({{ usuario.matricula }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="fornecedor">Fornecedor:</label>
+        <input type="text" id="fornecedor" name="fornecedor" required><br><br>
+
+        <label for="chave_nfe">Chave da NF-e (44 dígitos):</label>
+        <input type="text" id="chave_nfe" name="chave_nfe" maxlength="44" minlength="44" pattern="\d{44}" title="Deve conter 44 dígitos numéricos" required><br><br>
+
+        <label for="numero_nfe">Número da NF-e:</label>
+        <input type="text" id="numero_nfe" name="numero_nfe" required><br><br>
+
+        <label for="turno">Turno:</label>
+        <select id="turno" name="turno">
+            <option value="Manha">Manhã</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noite">Noite</option>
+        </select><br><br>
+
+        <button type="submit">Registrar Recebimento</button>
+    </form>
+{% endblock %}
