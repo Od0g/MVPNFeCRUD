@@ -1,60 +1,76 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #eef2f7; /* Cor de fundo mais suave */
     color: #333;
+    line-height: 1.6;
 }
 
 header {
-    background-color: #333;
+    background-color: #2c3e50; /* Azul escuro */
     color: #fff;
-    padding: 1rem 0;
+    padding: 1.2rem 0;
     text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
     margin: 0;
+    font-size: 2.2em;
+    letter-spacing: 1px;
 }
 
 nav {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 nav a {
-    color: #fff;
+    color: #a4b0be; /* Cinza claro para links */
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    margin: 0 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 0.7rem 1.5rem;
+    margin: 0 8px;
+    border-radius: 25px; /* Bordas mais arredondadas */
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 nav a:hover {
-    background-color: #555;
+    background-color: #34495e; /* Fundo mais escuro ao passar o mouse */
+    color: #ffffff;
 }
 
 main {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 1300px; /* Largura um pouco maior para tabelas */
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db; /* Linha azul de destaque */
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-size: 1.8em;
 }
 
 form {
     margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    padding: 25px;
+    border: 1px solid #dcdcdc; /* Borda mais suave */
+    border-radius: 8px;
+    background-color: #fcfcfc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 form label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
+    font-weight: 600;
+    color: #555;
 }
 
 form input[type="text"],
@@ -62,52 +78,91 @@ form input[type="email"],
 form input[type="date"],
 form select,
 form textarea {
-    width: calc(100% - 22px); /* Ajuste para padding e borda */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Garante que padding e borda não aumentem a largura */
+    width: calc(100% - 24px); /* Ajuste para padding e borda */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #c0c0c0;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="date"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #3498db; /* Borda azul ao focar */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    outline: none;
 }
 
 form button {
-    background-color: #28a745;
+    background-color: #28a745; /* Verde vibrante */
     color: white;
-    padding: 12px 20px;
+    padding: 14px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 form button:hover {
     background-color: #218838;
+    transform: translateY(-2px); /* Pequeno efeito ao passar o mouse */
 }
 
+/* Estilo para tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-table, th, td {
-    border: 1px solid #ddd;
+table thead {
+    background-color: #f2f2f2; /* Fundo do cabeçalho mais claro */
 }
 
-th, td {
-    padding: 10px;
+table th {
+    padding: 12px 15px;
     text-align: left;
+    border-bottom: 2px solid #ddd;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.95em;
 }
 
-th {
-    background-color: #f2f2f2;
+table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee; /* Bordas mais suaves */
+    font-size: 0.9em;
 }
 
-tr:nth-child(even) {
+table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+table tbody tr:hover {
+    background-color: #f0f8ff; /* Leve destaque ao passar o mouse na linha */
+}
+
+/* Cores de Status no Relatório */
+.status-pendente {
+    background-color: #fff8e1; /* Amarelo muito claro */
+    color: #c08d00; /* Texto amarelo escuro */
+    font-weight: 500;
+}
+
+.status-concluido {
+    background-color: #e8f5e9; /* Verde muito claro */
+    color: #2e7d32; /* Texto verde escuro */
+    font-weight: 500;
+}
+
+/* Mensagens Flash */
 .flash-messages {
     list-style: none;
     padding: 0;
@@ -115,36 +170,115 @@ tr:nth-child(even) {
 }
 
 .flash-messages li {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    margin-bottom: 12px;
+    border-radius: 6px;
     font-weight: bold;
+    font-size: 0.95em;
+    border-left: 5px solid; /* Adiciona uma linha de cor à esquerda */
 }
 
 .flash-messages .success {
     background-color: #d4edda;
     color: #155724;
-    border-color: #c3e6cb;
+    border-color: #28a745;
 }
 
 .flash-messages .danger {
     background-color: #f8d7da;
     color: #721c24;
-    border-color: #f5c6cb;
-}
-
-.status-pendente {
-    background-color: #fff3cd; /* Amarelo claro */
-}
-
-.status-concluido {
-    background-color: #d4edda; /* Verde claro */
+    border-color: #dc3545;
 }
 
 footer {
     text-align: center;
+    padding: 25px;
+    background-color: #2c3e50;
+    color: #a4b0be;
+    margin-top: 30px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+}
+
+/* Responsividade básica para o relatório (tabela) */
+@media screen and (max-width: 900px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    /* Oculta o cabeçalho real */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table tr {
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%; /* Espaço para o "cabeçalho" da célula */
+        text-align: right;
+    }
+
+    table td:before {
+        /* Cria um "cabeçalho" para cada célula com base no atributo data-label */
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Estilos para os gráficos */
+.charts-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem a linha */
+    gap: 20px; /* Espaço entre os gráficos */
+    justify-content: center; /* Centraliza os gráficos */
+    margin-bottom: 40px;
+}
+
+.chart-box {
+    flex: 1; /* Faz com que os gráficos ocupem o espaço disponível */
+    min-width: 300px; /* Largura mínima para o gráfico antes de quebrar a linha */
+    max-width: 500px; /* Largura máxima para cada gráfico */
+    background-color: #fcfcfc;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
     padding: 20px;
-    background-color: #333;
-    color: #fff;
-    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.chart-box h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+/* Ajuste para responsividade da tabela em telas menores, se necessário */
+@media screen and (max-width: 768px) {
+    .charts-container {
+        flex-direction: column; /* Empilha os gráficos em telas menores */
+        align-items: center;
+    }
+    .chart-box {
+        width: 100%; /* Ocupa toda a largura disponível */
+        max-width: none; /* Remove a largura máxima */
+    }
 }

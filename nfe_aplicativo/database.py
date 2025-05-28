@@ -39,9 +39,7 @@ class Expedicao(db.Model):
     responsavel_entrega_expedicao = db.Column(db.String(255))
     responsavel_recebimento_expedicao_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     recebimento_id = db.Column(db.Integer, db.ForeignKey('recebimento.id'), unique=True, nullable=False) # Garante 1:1
-    status = db.Column(db.String(20), default='Concluido') # <<< Você pode querer adicionar isso aqui também
-    turno = db.Column(db.String(50)) # <--- ADICIONE ESTA LINHA AQUI!
-
+    turno = db.Column(db.String(50)) # <<< Esta linha foi adicionada/corrigida
 
     responsavel_recebimento_expedicao = db.relationship('Usuario', backref='expedicoes_recebidas')
     recebimento_associado = db.relationship('Recebimento', backref='expedicao')
